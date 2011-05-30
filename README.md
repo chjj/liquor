@@ -12,6 +12,8 @@ Liquor is also for nerds who care about their markup to a slightly absurd degree
 it will maintain whitespace, clean up empty lines, etc. This is all to make 
 sure your "style" of markup is preserved.
 
+Update: Added experimental pretty print option.
+
 * * *
 
 This engine has 3 capabilities: __variable interpolation__, __conditionals__, 
@@ -52,8 +54,9 @@ not be displayed in any way in the output, however they are taken into account
 when determining the conditional's outcome.
 
     var hello = '<div>{<p>&:hello;</p>}</div>';
-  
-    liquor.compile(hello)({ hello: 'hello world' });
+    
+    var template = liquor.compile(hello);
+    template({ hello: 'hello world' });
 
 Outputs:
 
@@ -65,7 +68,8 @@ difference.
 
     <div>{!!&:num;<p>hello world!</p>}</div>
     
-    liquor.compile(hello)({ num: 250 });
+    var template = liquor.compile(hello);
+    template({ num: 250 });
 
 Outputs:
 
@@ -82,18 +86,19 @@ To traverse through a collection, the contents of the desired output must be
 contained in a wrapper, as demonstrated below. Within the statement,
 the context (`this`) refers to the value/subject of the current iteration. 
 
-Note: Liquor will try to duplicate the surrounding whitespace to make things 
-look pretty when producing the output of a collection traversal.
-
     <table>
-      <tr><td>&col[0];</td><td>&col[1];</td></tr>
-      :data[<tr>
-        <td>&:this#color;</td>
-        <td>&:this#animal;</td>
+      <tr>
+        #:col[<td>&:this;</td>];
+      </tr>
+      #:data[<tr>
+        <td>&:this.color;</td>
+        <td>&:this.animal;</td>
       </tr>];
     </table>
     
-    liquor.compile(table)({
+    var template = liquor.compile(table);
+    
+    template({
       col: ['color', 'animal'],
       data: [
         { color: 'brown', animal: 'bear' },
@@ -105,7 +110,10 @@ look pretty when producing the output of a collection traversal.
 The above will output:
 
     <table>
-      <tr><td>color</td><td>animal</td></tr>
+      <tr>
+        <td>color</td>
+        <td>animal</td>
+      </tr>
       <tr>
         <td>brown</td>
         <td>bear</td>

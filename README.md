@@ -1,129 +1,93 @@
-# Liquor - a templating engine minus the code
+# Liquor
 
-A word of warning: Liquor's idea of a template is that it is separate from 
-the code. Liquor follows the philosophy that if you're executing 
-raw code within your templates, you might be doing something wrong. This 
-is specifically for people who think massive amounts of logic do not belong 
-in templates. Liquor doesn't allow for any raw evaluation of code. It tries 
-to stay as declarative as possible, while remaining convenient. This is my 
-personal templating engine, things may change depending on how I use it.
+(__UPDATE__: Heading a new direction with liquor.)
 
-Liquor is also for nerds who care about their markup to a slightly absurd degree:
-it will maintain whitespace, clean up empty lines, etc. This is all to make 
-sure your "style" of markup is preserved.
+Liquor is a templating engine for node. It's very lightweight. It's essentially 
+embedded javascript with some shorthand significant whitespace notation available.
+This is to discourage use of raw code and make templates look nicer.
 
-Update: Added experimental pretty print option.
+## Usage
 
-* * *
+Backticks are used for evaluation, while `#{}` is used for interpolation.
 
-This engine has 3 capabilities: __variable interpolation__, __conditionals__, 
-and __collection traversal__. Liquor tries to have a very concise notation for 
-expressing these statements.
-
-## Variable Interpolation
-
-A variable is represented with an ampersand (`&`) followed by a 
-colon (`:`), followed by the variable name and a semicolon (`;`). Similar to an 
-HTML entity or character refernce, only with a colon.
-
-    &:data;
-
-Variable names can make use of any character except whitespace characters, 
-semicolon, and hash/pound (`#`). 
-
-Collection variables can access their members with a hash (`#`).
-
-    &:obj#key;
-
-However, you can also access an object's members the regular JS way:
-
-    &:obj.key;
-
-## Conditionals
-
-A conditional statement is denoted by curly braces, `{` and `}`.
-
-The contents of a conditional will __only__ be included in the output if every 
-variable contained within the top level of the containing conditional has a 
-truthy value. However, truthy and falsey values differ from those of JS:
-  - Falsey values include `false`, `null`, (and `undefined`, `NaN`).
-  - This means the empty string (`''`) and zero (`0`) are both truthy.
-
-Variables that are booleans (and nulls or any other non-displayable value) will 
-not be displayed in any way in the output, however they are taken into account 
-when determining the conditional's outcome.
-
-    var hello = '<div>{<p>&:hello;</p>}</div>';
-    
-    var template = liquor.compile(hello);
-    template({ hello: 'hello world' });
-
-Outputs:
-
-    <div><p>hello world!</p></div>
-
-A variable can be forced into a boolean context with a bang `!`. If this is 
-done, the position of the variable within the conditional does not make any 
-difference.
-
-    <div>{!!&:num;<p>hello world!</p>}</div>
-    
-    var template = liquor.compile(hello);
-    template({ num: 250 });
-
-Outputs:
-
-    <div><p>hello world!</p></div>
-
-Whereas using a single exclamation point to check whether the variable is 
-false would yield (in this case):
-
-    <div></div>
-
-## Collection Traversal
-
-To traverse through a collection, the contents of the desired output must be 
-contained in a wrapper, as demonstrated below. Within the statement,
-the context (`this`) refers to the value/subject of the current iteration. 
-
-    <table>
+``` html
+?:data
+  <table>
+    <tr>
+      @:col 
+        <td>#{this}</td>
+    </tr>
+    @:data
       <tr>
-        #:col[<td>&:this;</td>];
+        <td>#{this.color}</td>
+        <td>#{this.animal}</td>
       </tr>
-      #:data[<tr>
-        <td>&:this.color;</td>
-        <td>&:this.animal;</td>
-      </tr>];
-    </table>
-    
-    var template = liquor.compile(table);
-    
-    template({
-      col: ['color', 'animal'],
-      data: [
-        { color: 'brown', animal: 'bear' },
-        { color: 'black', animal: 'cat' },
-        { color: 'white', animal: 'horse' }
-      ]
-    });
+  </table>
 
-The above will output:
+!:data
+  <div>
+    ?:error
+      <p>Sorry, there was a problem: #{error}.</p>
+      <p>Please, try again!</p>
+    !:error
+      <p>Sorry, no error message.</p>
+  </div>
+```
 
-    <table>
+Is essentially shorthand for:
+
+``` html
+`if (typeof data !== 'undefined' && data) {`
+  <table>
+    <tr>
+      `each(col, function() {`
+        <td>#{this}</td>
+      `})`
+    </tr>
+    `each(data, function() {`
       <tr>
-        <td>color</td>
-        <td>animal</td>
+        <td>#{this.color}</td>
+        <td>#{this.animal}</td>
       </tr>
-      <tr>
-        <td>brown</td>
-        <td>bear</td>
-      </tr>
-      <tr>
-        <td>black</td>
-        <td>cat</td>
-      </tr>
-      <tr>
-        <td>white</td>
-        <td>horse</td>
-      </tr>
-    </table>
+    `})`
+  </table>
+`} else {`
+  <div>
+    `if (typeof error !== 'undefined' && error) {`
+      <p>Sorry, there was a problem: #{error}.</p>
+      <p>Please, try again!</p>
+    `} else {`
+      <p>Sorry, no error message.</p>
+    `}`
+  </div>
+`}`
+```
+
+``` html
+`/* liquor also exposes an "each" helper function */`
+`/* it is the same one used internally for @ statements */`
+`if (messages) 
+  each(messages, function(message, key) {`
+    <p>#{key}: #{message.content}</p>
+  `})`
+```
+
+If you're worried about the notorious "undefined" problem with 
+variables expressed in raw evaluation of JS, you can access them 
+as properties on a variable called `$`, which exists within the 
+context of a template, and holds all of the locals and helpers:
+
+e.g.
+
+``` html
+`if ($.messages) {` <p>#{JSON.stringify(messages)}</p> `}`
+```
+
+The parser is extremely simple and fast. It's just a couple of regexes, 
+which should also compile into very fast template function with minimal 
+`.push` calls onto the buffer.
+
+Liquor should work both client and server side.
+
+## License
+(c) Copyright 2011, Christopher Jeffrey. See LICENSE for more info.

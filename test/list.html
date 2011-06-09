@@ -1,14 +1,18 @@
 <ol>
-  #:list[<li>
-    <a href="&:this#href;">&:this#text;</a>
-    {<time datetime="&:this#datetime;">
-      {&:this#time;}
-    </time>}
-  </li>];
-  #:list2[<li>
-    <a href="&:this#href;">&:this#text;</a>
-    {<time datetime="&:this#datetime;">
-      {&:this#time;}
-    </time>}
-  </li>];
+  @:list
+    <li>
+      <a href="#{this.href}">#{this.text}</a>
+      ?:this.datetime
+        <time datetime="#{this.datetime}">
+          #{this.time}
+        </time>
+    </li>
+  @:list2
+    <li>
+      <a href="#{this.href}">#{this.text}</a>
+      ?:this.datetime
+        <time datetime="#{this.datetime}">
+          #{this.time}
+        </time>
+    </li>
 </ol>

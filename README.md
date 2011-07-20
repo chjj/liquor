@@ -1,10 +1,8 @@
 # Liquor
 
-(__UPDATE__: Heading a new direction with liquor.)
-
 Liquor is a templating engine for node. It's very lightweight. It's essentially 
-embedded javascript with some shorthand significant whitespace notation available.
-This is to discourage use of raw code and make templates look nicer.
+embedded javascript with some shorthand significant whitespace notation 
+available. This is to discourage use of raw code and make templates look nicer.
 
 ## Usage
 
@@ -72,22 +70,16 @@ Is essentially shorthand for:
   `})`
 ```
 
-If you're worried about the notorious "undefined" problem with 
-variables expressed in raw evaluation of JS, you can access them 
-as properties on a variable called `$`, which exists within the 
-context of a template, and holds all of the locals and helpers:
+If you're worried about the notorious "undefined" problem with variables 
+expressed in raw evaluation of JS, you can access them as properties on a 
+variable called `$`, which exists within the context of a template, and holds 
+all of the locals and helpers:
 
 e.g.
 
 ``` html
 `if ($.messages) {` <p>#{JSON.stringify(messages)}</p> `}`
 ```
-
-The parser is extremely simple and fast. It's just a couple of regexes, 
-which should also compile into very fast template function with minimal 
-`.push` calls onto the buffer.
-
-Liquor should work both client and server side.
 
 ## License
 (c) Copyright 2011, Christopher Jeffrey. See LICENSE for more info.

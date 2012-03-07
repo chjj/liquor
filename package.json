@@ -1,9 +1,12 @@
 {
   "name": "liquor",
-  "description": "templates without the code",
+  "description": "Templates, minus the code.",
   "author": "Christopher Jeffrey",
   "version": "0.0.2",
   "main": "./lib/liquor.js",
   "repository": "git://github.com/chjj/liquor.git",
-  "keywords": [ "template" ]
+  "homepage": "https://github.com/chjj/liquor",
+  "bugs": { "url": "https://github.com/chjj/liquor/issues" },
+  "keywords": [ "template", "html" ],
+  "tags": [ "template", "html" ]
 }

@@ -1,7 +1,7 @@
 # Liquor
 
-Liquor is a templating engine for node. It's very lightweight. It's essentially 
-embedded javascript with some shorthand significant whitespace notation 
+Liquor is a templating engine for node. It's very lightweight. It's essentially
+embedded javascript with some shorthand significant whitespace notation
 available. This is to discourage use of raw code and make templates look nicer.
 
 ## Usage
@@ -12,7 +12,7 @@ Backticks are used for evaluation, while `#{}` is used for interpolation.
 ?:data
   <table>
     <tr>
-      @:col 
+      @:col
         <td>#{this}</td>
     </tr>
     @:data
@@ -64,15 +64,15 @@ Is essentially shorthand for:
 ``` html
 `/* liquor also exposes an "each" helper function */`
 `/* it is the same one used internally for @ statements */`
-`if (messages) 
+`if (messages)
   each(messages, function(message, key) {`
     <p>#{key}: #{message.content}</p>
   `})`
 ```
 
-If you're worried about the notorious "undefined" problem with variables 
-expressed in raw evaluation of JS, you can access them as properties on a 
-variable called `$`, which exists within the context of a template, and holds 
+If you're worried about the notorious "undefined" problem with variables
+expressed in raw evaluation of JS, you can access them as properties on a
+variable called `$`, which exists within the context of a template, and holds
 all of the locals and helpers:
 
 e.g.
@@ -82,4 +82,4 @@ e.g.
 ```
 
 ## License
-(c) Copyright 2011, Christopher Jeffrey. See LICENSE for more info.
+(c) Copyright 2011-2012, Christopher Jeffrey. See LICENSE for more info.

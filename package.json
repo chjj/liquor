@@ -2,7 +2,7 @@
   "name": "liquor",
   "description": "Templates, minus the code.",
   "author": "Christopher Jeffrey",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./lib/liquor.js",
   "repository": "git://github.com/chjj/liquor.git",
   "homepage": "https://github.com/chjj/liquor",
